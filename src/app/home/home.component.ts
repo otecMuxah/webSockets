@@ -2,14 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebsocketApiService } from '../shared/services/websocket.api.service';
 import { webSocket } from 'rxjs/webSocket';
-import { WEB_SOCKET, WS_URL } from '../app.module';
+import { WEB_SOCKET } from '../app.module';
+import { Subject, takeUntil } from 'rxjs';
 
 export interface WsMsg {
   message: string;
@@ -42,6 +42,7 @@ export interface WsMsg {
 })
 export class HomeComponent implements OnInit, OnDestroy {
   messages: string[] = [];
+  destroy$ = new Subject();
 
   constructor(
     public wsService: WebsocketApiService<WsMsg>,
@@ -49,14 +50,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.wsService.stream$.subscribe((msg) => {
+    this.wsService.stream$.pipe(takeUntil(this.destroy$)).subscribe((msg) => {
       this.messages.push(msg.message);
-      this.cd.detectChanges();
+      this.cd.markForCheck();
     });
   }
 
   ngOnDestroy() {
     this.wsService.disconnect();
+    this.destroy$.next({});
+    this.destroy$.complete();
   }
 
   sendMessage(msg: string): void {
