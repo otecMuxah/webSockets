@@ -1,0 +1,8 @@
+<p>home works!</p>
+
+<input #inp type="text">
+<button (click)="sendMessage(inp.value)" type="submit">Send</button>
+
+<ul>
+  <li *ngFor="let msg of messages"> {{ msg | json}}</li>
+</ul>
