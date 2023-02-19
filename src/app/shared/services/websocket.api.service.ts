@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { WebSocketSubject } from 'rxjs/webSocket';
 import { filter, Observable } from 'rxjs';
 import { WEB_SOCKET } from '../../app.module';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WebsocketApiService<T> {
   public stream$!: Observable<T>;
 

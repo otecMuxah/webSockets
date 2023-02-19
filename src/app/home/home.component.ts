@@ -24,9 +24,9 @@ export interface WsMsg {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    WebsocketApiService,
-    HomeFacadeService,
     // we can override websocket URL or deserializer function on component or module level
+    // WebsocketApiService,
+    // HomeFacadeService,
     // {
     //   provide: WEB_SOCKET,
     //   useFactory: () =>
