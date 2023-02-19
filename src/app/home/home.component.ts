@@ -10,6 +10,7 @@ import { WebsocketApiService } from '../shared/services/websocket.api.service';
 import { webSocket } from 'rxjs/webSocket';
 import { WEB_SOCKET } from '../app.module';
 import { Subject, takeUntil } from 'rxjs';
+import { HomeFacadeService } from './data-access/home.facade.service';
 
 export interface WsMsg {
   message: string;
@@ -45,24 +46,27 @@ export class HomeComponent implements OnInit, OnDestroy {
   destroy$ = new Subject();
 
   constructor(
-    public wsService: WebsocketApiService<WsMsg>,
+    public homeFacadeService: HomeFacadeService,
     private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.wsService.stream$.pipe(takeUntil(this.destroy$)).subscribe((msg) => {
-      this.messages.push(msg.message);
-      this.cd.markForCheck();
-    });
+    this.homeFacadeService
+      .getStream()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((msg) => {
+        this.messages.push(msg.message);
+        this.cd.markForCheck();
+      });
   }
 
   ngOnDestroy() {
-    this.wsService.disconnect();
+    this.homeFacadeService.disconnect();
     this.destroy$.next({});
     this.destroy$.complete();
   }
 
   sendMessage(msg: string): void {
-    this.wsService.message({ message: msg });
+    this.homeFacadeService.sendMessage(msg);
   }
 }
