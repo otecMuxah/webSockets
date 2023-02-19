@@ -25,20 +25,21 @@ export interface WsMsg {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     WebsocketApiService,
-    {
-      provide: WEB_SOCKET,
-      useFactory: () =>
-        webSocket({
-          url: 'wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self',
-          deserializer: (e) => {
-            try {
-              return JSON.parse(e.data);
-            } catch (e) {
-              console.warn(e);
-            }
-          },
-        }),
-    },
+    // we can override websocket URL or deserializer function on component or module level
+    // {
+    //   provide: WEB_SOCKET,
+    //   useFactory: () =>
+    //     webSocket({
+    //       url: 'wss://demo.piesocket.com/v3/channel_123?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self',
+    //       deserializer: (e) => {
+    //         try {
+    //           return JSON.parse(e.data);
+    //         } catch (e) {
+    //           console.warn(e);
+    //         }
+    //       },
+    //     }),
+    // },
   ],
 })
 export class HomeComponent implements OnInit, OnDestroy {
