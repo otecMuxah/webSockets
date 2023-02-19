@@ -25,6 +25,7 @@ export interface WsMsg {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     WebsocketApiService,
+    HomeFacadeService,
     // we can override websocket URL or deserializer function on component or module level
     // {
     //   provide: WEB_SOCKET,

@@ -1,9 +1,10 @@
-import { inject, Inject, InjectionToken, NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { WebSocketSubject } from 'rxjs/webSocket';
+import { WebSocketFactory } from './shared/utils/webSocketFactory';
 
 export const WS_URL: InjectionToken<string> = new InjectionToken('WS_URL');
 export const WEB_SOCKET = new InjectionToken<WebSocketSubject<any>>(
@@ -21,17 +22,7 @@ export const WEB_SOCKET = new InjectionToken<WebSocketSubject<any>>(
     },
     {
       provide: WEB_SOCKET,
-      useFactory: () =>
-        webSocket({
-          url: inject(WS_URL),
-          deserializer: (e) => {
-            try {
-              return JSON.parse(e.data);
-            } catch (e) {
-              console.log(e);
-            }
-          },
-        }),
+      useFactory: WebSocketFactory,
     },
   ],
   bootstrap: [AppComponent],
